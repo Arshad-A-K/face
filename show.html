@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Welcome Screen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #welcomeMessage {
+            font-size: 24px;
+            margin-top: 50px;
+        }
+        #guestDetails {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Our Event!</h1>
+    <div id="welcomeMessage"></div>
+    <div id="guestDetails"></div>
+
+    <script>
+        // Function to display guest details on the big screen
+        function displayGuestDetails(guestName) {
+            const welcomeMessageElement = document.getElementById('welcomeMessage');
+            const guestDetailsElement = document.getElementById('guestDetails');
+
+            welcomeMessageElement.innerText = `Welcome, ${guestName}!`;
+
+            // You can fetch additional details about the guest from the backend
+            // and display them in the guestDetailsElement
+
+            // For demonstration purposes, let's display a sample message
+            guestDetailsElement.innerText = 'Enjoy your time at the event!';
+        }
+
+        // Example usage: Call displayGuestDetails function with the guest's name
+        displayGuestDetails('John Doe');
+    </script>
+</body>
+</html>

@@ -1,23 +1,36 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facial Recognition Check-In</title>
+    <title>Camera Capture</title>
     <style>
         /* Add your CSS styles here */
+        #videoElement {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+        #captureButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <h1>Facial Recognition Check-In</h1>
+    <h1>Camera Capture</h1>
     <video id="videoElement" autoplay></video>
-    <button id="captureButton" onclick="captureImage()">Capture Image</button>
-    <div id="result"></div>
+    <button id="captureButton" onclick="captureImage()">Capture Photo</button>
+
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
         const videoElement = document.getElementById('videoElement');
         const captureButton = document.getElementById('captureButton');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
@@ -28,33 +41,20 @@
             });
 
         function captureImage() {
-            const canvas = document.createElement('canvas');
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-            const context = canvas.getContext('2d');
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            // Draw the current frame from the video onto the canvas
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Convert the canvas content to a base64 encoded image
             const base64Image = canvas.toDataURL('image/jpeg');
 
-            // Send the captured image to the server for facial recognition
-            fetch('/recognize', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ image: base64Image })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const guestName = data.guest;
-                    document.getElementById('result').innerText = `Welcome, ${guestName}!`;
-                } else {
-                    document.getElementById('result').innerText = 'Guest not recognized.';
-                }
-            })
-            .catch(error => {
-                console.error('Error recognizing face:', error);
-            });
+            // Display the captured image (for testing purposes)
+            const img = document.createElement('img');
+            img.src = base64Image;
+            document.body.appendChild(img);
+
+            // You can send the base64Image to the backend for further processing (e.g., facial recognition)
+            // For demonstration purposes, we'll log the base64 data to the console
+            console.log('Captured Image:', base64Image);
         }
     </script>
 </body>
